@@ -17,40 +17,66 @@ export const PredictionForm = ({ onPredict, isLoading }: PredictionFormProps) =>
     garage: 2,
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: parseFloat(value) || 0,
-    }));
+  // UNIVERSAL FIXED INPUT HANDLER
+  const handleNumberInput = (name: keyof HouseFeatures, value: string) => {
+    // Allow empty field
+    if (value === "") {
+      setFormData({ ...formData, [name]: "" as any });
+      return;
+    }
+
+    // Remove leading zeros (01700 → 1700)
+    const cleaned = value.replace(/^0+(?=\d)/, "");
+
+    // Convert to number safely
+    const num = Number(cleaned);
+
+    if (!isNaN(num)) {
+      setFormData({ ...formData, [name]: num });
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onPredict(formData);
+
+    // Ensure all values are numbers
+    const finalData: HouseFeatures = {
+      squareFeet: Number(formData.squareFeet),
+      bedrooms: Number(formData.bedrooms),
+      bathrooms: Number(formData.bathrooms),
+      yearBuilt: Number(formData.yearBuilt),
+      lotSize: Number(formData.lotSize),
+      garage: Number(formData.garage),
+    };
+
+    onPredict(finalData);
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        {/* Square Feet */}
         <div>
           <label htmlFor="squareFeet" className="block text-sm font-medium text-gray-700 mb-2">
-            Square Feet
+            Buildup area
           </label>
           <input
             type="number"
             id="squareFeet"
             name="squareFeet"
-            value={formData.squareFeet}
-            onChange={handleChange}
-            min="500"
+            step="any"   // <--- ALLOW ANY VALUE
+            value={formData.squareFeet === 0 ? "" : formData.squareFeet}
+            onChange={(e) => handleNumberInput("squareFeet", e.target.value)}
+            min="300"
             max="10000"
-            step="100"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 
+              focus:ring-blue-500 focus:border-transparent transition-all"
             required
           />
         </div>
 
+        {/* Bedrooms */}
         <div>
           <label htmlFor="bedrooms" className="block text-sm font-medium text-gray-700 mb-2">
             Bedrooms
@@ -59,15 +85,18 @@ export const PredictionForm = ({ onPredict, isLoading }: PredictionFormProps) =>
             type="number"
             id="bedrooms"
             name="bedrooms"
-            value={formData.bedrooms}
-            onChange={handleChange}
+            step="1"
+            value={formData.bedrooms === 0 ? "" : formData.bedrooms}
+            onChange={(e) => handleNumberInput("bedrooms", e.target.value)}
             min="1"
             max="10"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 
+              focus:ring-blue-500 focus:border-transparent transition-all"
             required
           />
         </div>
 
+        {/* Bathrooms */}
         <div>
           <label htmlFor="bathrooms" className="block text-sm font-medium text-gray-700 mb-2">
             Bathrooms
@@ -76,16 +105,18 @@ export const PredictionForm = ({ onPredict, isLoading }: PredictionFormProps) =>
             type="number"
             id="bathrooms"
             name="bathrooms"
-            value={formData.bathrooms}
-            onChange={handleChange}
+            step="0.5"
+            value={formData.bathrooms === 0 ? "" : formData.bathrooms}
+            onChange={(e) => handleNumberInput("bathrooms", e.target.value)}
             min="1"
             max="10"
-            step="0.5"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 
+              focus:ring-blue-500 focus:border-transparent transition-all"
             required
           />
         </div>
 
+        {/* Year Built */}
         <div>
           <label htmlFor="yearBuilt" className="block text-sm font-medium text-gray-700 mb-2">
             Year Built
@@ -94,55 +125,66 @@ export const PredictionForm = ({ onPredict, isLoading }: PredictionFormProps) =>
             type="number"
             id="yearBuilt"
             name="yearBuilt"
-            value={formData.yearBuilt}
-            onChange={handleChange}
+            step="1"
+            value={formData.yearBuilt === 0 ? "" : formData.yearBuilt}
+            onChange={(e) => handleNumberInput("yearBuilt", e.target.value)}
             min="1900"
             max="2024"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 
+              focus:ring-blue-500 focus:border-transparent transition-all"
             required
           />
         </div>
 
+        {/* Lot Size */}
         <div>
           <label htmlFor="lotSize" className="block text-sm font-medium text-gray-700 mb-2">
-            Lot Size (sq ft)
+            Total Land area (sq ft)
           </label>
           <input
             type="number"
             id="lotSize"
             name="lotSize"
-            value={formData.lotSize}
-            onChange={handleChange}
-            min="1000"
+            step="any"
+            value={formData.lotSize === 0 ? "" : formData.lotSize}
+            onChange={(e) => handleNumberInput("lotSize", e.target.value)}
+            min="500"
             max="50000"
-            step="500"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 
+              focus:ring-blue-500 focus:border-transparent transition-all"
             required
           />
         </div>
 
+        {/* Garage */}
         <div>
           <label htmlFor="garage" className="block text-sm font-medium text-gray-700 mb-2">
-            Garage Spaces
+            Garage Space
           </label>
           <input
             type="number"
             id="garage"
             name="garage"
-            value={formData.garage}
-            onChange={handleChange}
+            step="1"
+            value={formData.garage === 0 ? "" : formData.garage}
+            onChange={(e) => handleNumberInput("garage", e.target.value)}
             min="0"
             max="4"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 
+              focus:ring-blue-500 focus:border-transparent transition-all"
             required
           />
         </div>
+
       </div>
 
+      {/* Submit Button */}
       <button
         type="submit"
         disabled={isLoading}
-        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 
+          px-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 
+          flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <Home size={20} />
         {isLoading ? 'Predicting...' : 'Predict House Price'}
