@@ -1,11 +1,11 @@
 🏡 House Price Prediction – Internship Project
 
     A modern, interactive web application that predicts house prices based on key property features such as square footage, bedrooms, bathrooms, lot size, and year built.
-The system uses machine learning to generate accurate predictions and provides confidence scores, price ranges, and data visualization.
+The system uses machine learning to generate accurate predictions and provides confidence scores, price ranges, and data visualisation.
 
 🚀 Live Demo
 
-    🔗 (Add your Vercel/Netlify link here after deployment)
+    🔗 (https://internship-seven-pi.vercel.app/)
 
 📌 Project Overview
 
@@ -22,7 +22,7 @@ The system uses machine learning to generate accurate predictions and provides c
 
     Multi-currency support (INR, USD, EUR, GBP)
 
-    The UI is clean, responsive, and optimized for professional use.
+    The UI is clean, responsive, and optimised for professional use.
 
 ✨ Key Features
 🧠 1. Machine Learning-Based Price Prediction
